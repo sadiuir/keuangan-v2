@@ -1,0 +1,101 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+model User {
+  id               String       @id @default(cuid())
+  email            String       @unique
+  password         String
+  name             String
+  autoDebetEnabled Boolean      @default(true)
+  ewsEnabled       Boolean      @default(true)
+  kostThreshold    Float        @default(10000)
+  showBudgeting    Boolean      @default(true)
+  showLoans        Boolean      @default(true)
+  showKost         Boolean      @default(true)
+  currency         String       @default("IDR")
+  themePreference  String       @default("dark")
+  overspendingAlertEnabled Boolean @default(true)
+  wallets          Wallet[]
+  loans            Loan[]
+  allocations      Allocation[]
+  cronLogs         CronLog[]
+}
+
+model Wallet {
+  id                  String        @id @default(cuid())
+  name                String
+  type                String        // CASH, BANK, EWALLET
+  balance             Float         @default(0)
+  description         String?
+  userId              String
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions        Transaction[] @relation("WalletTransactions")
+  transferDestinations Transaction[] @relation("WalletTransferTransactions")
+  loans               Loan[]
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  amount      Float
+  type        String   // INCOME, EXPENSE, TRANSFER
+  category    String   // Makan, Transportasi, Hiburan, Gaji, Cicilan, Transfer, dll.
+  description String?
+  timestamp   DateTime @default(now())
+  isNeed      Boolean  @default(false)
+  
+  walletId    String
+  wallet      Wallet   @relation("WalletTransactions", fields: [walletId], references: [id], onDelete: Cascade)
+  
+  toWalletId  String?
+  toWallet    Wallet?  @relation("WalletTransferTransactions", fields: [toWalletId], references: [id], onDelete: Cascade)
+}
+
+model Loan {
+  id                 String   @id @default(cuid())
+  name               String
+  principal          Float
+  interestRate       Float    // Persentase tahunan, misal 12 untuk 12%
+  termMonths         Int      // Tenor dalam bulan
+  remainingTerm      Int      // Sisa bulan tenor
+  interestType       String   // FLAT, EFEKTIF, ANUITAS
+  status             String   @default("ACTIVE") // ACTIVE, PAID
+  nextDueDate        DateTime
+  monthlyPayment     Float
+  remainingPrincipal Float
+  autoDebet          Boolean  @default(true)
+  
+  walletId           String
+  wallet             Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Allocation {
+  id           String   @id @default(cuid())
+  savingsPct   Float    @default(30)
+  emergencyPct Float    @default(30)
+  pocketPct    Float    @default(40)
+  createdAt    DateTime @default(now())
+  
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CronLog {
+  id         String   @id @default(cuid())
+  taskName   String
+  status     String   // SUCCESS, FAILED
+  logMessage String
+  executedAt DateTime @default(now())
+  
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
