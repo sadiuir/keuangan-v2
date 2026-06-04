@@ -5,7 +5,6 @@ import Sidebar from '@/components/Sidebar';
 import SmartBudgeting from '@/components/SmartBudgeting';
 import { Sliders } from 'lucide-react';
 
-export const runtime = 'edge';
 
 export default async function AllocationPage() {
   const session = await auth();

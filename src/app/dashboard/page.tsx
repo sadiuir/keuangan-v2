@@ -11,7 +11,6 @@ import { Calendar, RefreshCw, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { prisma } from '@/lib/db';
 import { ensureUserSettingsSchema } from '@/lib/migrations';
 
-export const runtime = 'edge';
 
 export default async function DashboardPage() {
   const session = await auth();

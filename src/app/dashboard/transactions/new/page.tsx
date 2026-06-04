@@ -4,7 +4,6 @@ import Sidebar from '@/components/Sidebar';
 import TransactionForm from '@/components/TransactionForm';
 import { prisma } from '@/lib/db';
 
-export const runtime = 'edge';
 
 export default async function NewTransactionPage() {
   const session = await auth();

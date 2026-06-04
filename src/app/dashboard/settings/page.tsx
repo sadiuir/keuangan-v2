@@ -4,7 +4,6 @@ import { prisma } from '@/lib/db';
 import { ensureUserSettingsSchema } from '@/lib/migrations';
 import SettingsForm from './SettingsForm';
 
-export const runtime = 'edge';
 
 export default async function SettingsPage() {
   const session = await auth();

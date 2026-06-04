@@ -5,7 +5,6 @@ import { prisma } from '@/lib/db';
 import { formatRupiah } from '@/components/HighlightCards';
 import { Calendar, History, ArrowUpRight, ArrowDownRight, RefreshCw } from 'lucide-react';
 
-export const runtime = 'edge';
 
 export default async function TransactionsHistoryPage() {
   const session = await auth();

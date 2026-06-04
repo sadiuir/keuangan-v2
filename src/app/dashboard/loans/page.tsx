@@ -6,7 +6,6 @@ import LoanManager from '@/components/LoanManager';
 import { CreditCard } from 'lucide-react';
 import { prisma } from '@/lib/db';
 
-export const runtime = 'edge';
 
 export default async function LoansPage() {
   const session = await auth();
