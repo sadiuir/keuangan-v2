@@ -1,4 +1,7 @@
-name = "keuangan-v2-1"
-compatibility_date = "2024-05-02"
-compatibility_flags = [ "nodejs_compat" ]
-pages_build_output_dir = ".vercel/output"
+name = "keuangan-v2"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".open-next/assets"
+
+[build]
+command = "npm run pages:build"
